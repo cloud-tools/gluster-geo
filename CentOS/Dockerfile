@@ -1,4 +1,4 @@
-FROM centos:7
+FROM centos:7.4.1708
 
 ENV container docker
 
@@ -12,7 +12,7 @@ LABEL architecture="x86_64" \
       description="Gluster Image is based on CentOS Image which is a scalable network filesystem. Using common off-the-shelf hardware, you can create large, distributed storage solutions for media streaming, data analysis, and other data- and bandwidth-intensive tasks." \
       io.openshift.tags="gluster,glusterfs,glusterfs-centos"
 
-RUN yum --setopt=tsflags=nodocs -y update; yum install -y centos-release-gluster312.noarch; yum clean all; \
+RUN yum --setopt=tsflags=nodocs install -y centos-release-gluster312.noarch; yum clean all; \
 (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
 rm -f /lib/systemd/system/multi-user.target.wants/*;\
 rm -f /etc/systemd/system/*.wants/*;\
@@ -21,7 +21,7 @@ rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
 rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
 rm -f /lib/systemd/system/basic.target.wants/*;\
 rm -f /lib/systemd/system/anaconda.target.wants/*;\
-yum --setopt=tsflags=nodocs -y install nfs-utils attr iputils iproute openssh-server openssh-clients ntp rsync tar cronie sudo xfsprogs glusterfs glusterfs-server glusterfs-rdma glusterfs-geo-replication;yum clean all; \
+yum --setopt=tsflags=nodocs -y install nfs-utils attr iputils iproute openssh-server openssh-clients ntp rsync tar cronie sudo xfsprogs glusterfs-libs-3.12.6 glusterfs-fuse-3.12.6 glusterfs-rdma-3.12.6 glusterfs-geo-replication-3.12.6 glusterfs-3.12.6 glusterfs-client-xlators-3.12.6 glusterfs-api-3.12.6 glusterfs-cli-3.12.6 python2-gluster-3.12.6 glusterfs-server-3.12.6  ; yum clean all; \
 sed -i '/Defaults    requiretty/c\#Defaults    requiretty' /etc/sudoers; \
 sed -i '/Port 22/c\Port 2222' /etc/ssh/sshd_config; \
 sed -i 's/Requires\=rpcbind\.service//g' /usr/lib/systemd/system/glusterd.service; \
