@@ -12,7 +12,7 @@ LABEL architecture="x86_64" \
       description="Gluster Image is based on CentOS Image which is a scalable network filesystem. Using common off-the-shelf hardware, you can create large, distributed storage solutions for media streaming, data analysis, and other data- and bandwidth-intensive tasks." \
       io.openshift.tags="gluster,glusterfs,glusterfs-centos"
 
-RUN yum --setopt=tsflags=nodocs -y update; yum install -y centos-release-gluster312.noarch; yum clean all; \
+RUN yum --setopt=tsflags=nodocs -y update; yum install -y centos-release-gluster6; yum clean all; \
 (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
 rm -f /lib/systemd/system/multi-user.target.wants/*;\
 rm -f /etc/systemd/system/*.wants/*;\
