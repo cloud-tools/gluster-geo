@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 ###
 # Description: Script to move the glusterfs initial setup to bind mounted directories of Atomic Host.
@@ -27,7 +27,7 @@ main () {
           echo "$i is not empty"
     else
           bkp=$i"_bkp"
-          cp -af $bkp/* $i
+          cp -r $bkp/* $i
           if [ $? -eq 1 ]
           then
                 echo "Failed to copy $i"
@@ -39,14 +39,14 @@ main () {
 
   if test "$(ls $GLUSTERFS_LOG_CONT_DIR)"
   then
-        true > $GLUSTERFS_LOG_CONT_DIR/brickattr
-        true > $GLUSTERFS_LOG_CONT_DIR/failed_bricks
-        true > $GLUSTERFS_LOG_CONT_DIR/lvscan
-        true > $GLUSTERFS_LOG_CONT_DIR/mountfstab
+            echo "" > $GLUSTERFS_LOG_CONT_DIR/brickattr
+            echo "" > $GLUSTERFS_LOG_CONT_DIR/failed_bricks
+            echo "" > $GLUSTERFS_LOG_CONT_DIR/lvscan
+            echo "" > $GLUSTERFS_LOG_CONT_DIR/mountfstab
   else
         mkdir $GLUSTERFS_LOG_CONT_DIR
-        true > $GLUSTERFS_LOG_CONT_DIR/brickattr
-        true > $GLUSTERFS_LOG_CONT_DIR/failed_bricks
+        echo "" > $GLUSTERFS_LOG_CONT_DIR/brickattr
+        echo "" > $GLUSTERFS_LOG_CONT_DIR/failed_bricks
   fi
   if test "$(ls $GLUSTERFS_CUSTOM_FSTAB)"
   then
@@ -54,18 +54,13 @@ main () {
         pvscan > $GLUSTERFS_LOG_CONT_DIR/pvscan
         vgscan > $GLUSTERFS_LOG_CONT_DIR/vgscan
         lvscan > $GLUSTERFS_LOG_CONT_DIR/lvscan
-        vgchange -ay > $GLUSTERFS_LOG_CONT_DIR/vgchange
-
-        mount -a --fstab $GLUSTERFS_CUSTOM_FSTAB &> $GLUSTERFS_LOG_CONT_DIR/mountfstab
-        sts=$?
-        if [ $sts -eq 0 ]
+        mount -a --fstab $GLUSTERFS_CUSTOM_FSTAB > $GLUSTERFS_LOG_CONT_DIR/mountfstab
+        if [ $? -eq 1 ]
         then
-              echo "Mount command Successful" >> $GLUSTERFS_LOG_CONT_DIR/mountfstab
-              exit 0
+              echo "mount binary not failed" >> $GLUSTERFS_LOG_CONT_DIR/mountfstab
+              exit 1
         fi
-
-        # mounting (some of) the bricks failed, retry
-        echo "mount command exited with code ${sts}" >> $GLUSTERFS_LOG_CONT_DIR/mountfstab
+        echo "Mount command Successful" >> $GLUSTERFS_LOG_CONT_DIR/mountfstab
         sleep 40
         cut -f 2 -d " " $GLUSTERFS_CUSTOM_FSTAB | while read -r line
         do
@@ -85,7 +80,7 @@ main () {
                    sleep 0.5
              fi
         done
-        if [ "$(wc -l < $GLUSTERFS_LOG_CONT_DIR/failed_bricks)" -gt 0 ]
+        if [ "$(wc -l $GLUSTERFS_LOG_CONT_DIR/failed_bricks )" -gt 1 ]
         then
               vgscan --mknodes > $GLUSTERFS_LOG_CONT_DIR/vgscan_mknodes
               sleep 10
@@ -98,4 +93,6 @@ main () {
   echo "Script Ran Successfully"
   exit 0
 }
+
 main
+
