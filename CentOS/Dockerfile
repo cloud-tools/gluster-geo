@@ -127,6 +127,7 @@ sed 's#.ssh/authorized_keys#.ssh/authorized_keys /var/lib/glusterd/geo-replicati
 mkdir ~/.ssh ; chown 700 ~/.ssh; \
 touch /var/lib/glusterd/geo-replication/authorized_keys; chmod 600 /var/lib/glusterd/geo-replication/authorized_keys; \
 ln -s /var/lib/glusterd/geo-replication/authorized_keys ~/.ssh/authorized_keys ; \
+ln -s /usr/lib64/libgfchangelog.so.0 /usr/lib64/libgfchangelog.so ; \
 ln -s /usr/libexec/glusterfs/ /nonexistent;
 
 
