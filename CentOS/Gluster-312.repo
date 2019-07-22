@@ -1,0 +1,6 @@
+[centos-gluster312] 
+name=CentOS-$releasever - Gluster 3.12 
+baseurl=https://buildlogs.centos.org/centos/7/storage/x86_64/gluster-3.12/
+gpgcheck=0
+enabled=1 
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-SIG-Storage
