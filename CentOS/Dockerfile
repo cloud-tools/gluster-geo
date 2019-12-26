@@ -27,7 +27,7 @@ yum --setopt=tsflags=nodocs -y install nfs-utils attr iputils iproute openssh-se
 sed -i '/Defaults    requiretty/c\#Defaults    requiretty' /etc/sudoers; \
 sed -i '/Port 22/c\Port 2222' /etc/ssh/sshd_config; \
 mkdir /etc/systemd/system/sshd.service.d/; \
-printf '[Unit]\nRefuseManualStop=true\n' > /etc/systemd/system/sshd.service.d/override.conf; \
+echo -e '[Unit]\nRefuseManualStop=true' > /etc/systemd/system/sshd.service.d/override.conf; \
 systemctl daemon-reload; \
 sed -i 's/Requires\=rpcbind\.service//g' /usr/lib/systemd/system/glusterd.service; \
 sed -i 's/rpcbind\.service/gluster-setup\.service/g' /usr/lib/systemd/system/glusterd.service; \
