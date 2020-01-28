@@ -26,7 +26,6 @@ rm -f /lib/systemd/system/anaconda.target.wants/*;\
 yum --setopt=tsflags=nodocs -y install nfs-utils attr iputils iproute openssh-server openssh-clients ntp rsync tar cronie sudo xfsprogs glusterfs-libs-3.12.6-1.el7 glusterfs-fuse-3.12.6-1.el7 glusterfs-rdma-3.12.6-1.el7 glusterfs-geo-replication-3.12.6-1.el7 glusterfs-3.12.6-1.el7 glusterfs-client-xlators-3.12.6-1.el7 glusterfs-api-3.12.6-1.el7 glusterfs-cli-3.12.6-1.el7 python2-gluster-3.12.6-1.el7 glusterfs-server-3.12.6-1.el7  ; yum clean all; \
 sed -i '/Defaults    requiretty/c\#Defaults    requiretty' /etc/sudoers; \
 sed -i '/Port 22/c\Port 2222' /etc/ssh/sshd_config; \
-systemctl daemon-reload; \
 sed -i 's/Requires\=rpcbind\.service//g' /usr/lib/systemd/system/glusterd.service; \
 sed -i 's/rpcbind\.service/gluster-setup\.service/g' /usr/lib/systemd/system/glusterd.service; \
 sed -i 's/ENV{DM_UDEV_DISABLE_OTHER_RULES_FLAG}=="1", ENV{SYSTEMD_READY}="0"/ENV{DM_UDEV_DISABLE_OTHER_RULES_FLAG}=="1", GOTO="systemd_end"/g' /usr/lib/udev/rules.d/99-systemd.rules; \
