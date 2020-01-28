@@ -48,13 +48,13 @@ ADD gluster-setup.service /etc/systemd/system/gluster-setup.service
 ADD gluster-setup.sh /usr/sbin/gluster-setup.sh
 ADD gluster-geo-setup.service /etc/systemd/system/gluster-geo-setup.service
 ADD gluster-geo-setup.sh /usr/sbin/gluster-geo-setup.sh
-ADD update-params.sh /usr/local/bin/update-params.sh
+ADD entrypoint.sh /usr/local/bin/entrypoint.sh
 
 RUN chmod 644 /etc/systemd/system/gluster-setup.service; \
 chmod 500 /usr/sbin/gluster-setup.sh; \
 chmod 644 /etc/systemd/system/gluster-geo-setup.service; \
 chmod 500 /usr/sbin/gluster-geo-setup.sh; \
-chmod +x /usr/local/bin/update-params.sh; \
+chmod +x /usr/local/bin/entrypoint.sh; \
 systemctl disable nfs-server.service; \
 systemctl mask getty.target; \
 systemctl enable ntpd.service; \
@@ -64,6 +64,5 @@ systemctl enable gluster-geo-setup.service;
 
 EXPOSE 2222 111 245 443 24007 2049 8080 6010 6011 6012 38465 38466 38468 38469 49152 49153 49154 49156 49157 49158 49159 49160 49161 49162
 
-ENTRYPOINT ["/usr/local/bin/update-params.sh"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["/usr/sbin/init"]
-
