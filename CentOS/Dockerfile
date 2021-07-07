@@ -23,7 +23,9 @@ rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
 rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
 rm -f /lib/systemd/system/basic.target.wants/*;\
 rm -f /lib/systemd/system/anaconda.target.wants/*;\
-yum --setopt=tsflags=nodocs -y install nfs-utils attr iputils iproute openssh-server openssh-clients ntp rsync tar cronie sudo xfsprogs glusterfs-libs glusterfs-fuse glusterfs-rdma glusterfs-geo-replication glusterfs glusterfs-client-xlators glusterfs-api glusterfs-cli python2-gluster glusterfs-server  ; yum clean all; \
+yum --setopt=tsflags=nodocs -y install nfs-utils attr iputils iproute openssh-server openssh-clients ntp rsync tar cronie sudo xfsprogs glusterfs-libs-3.12.6-1.el7 glusterfs-fuse-3.12.6-1.el7 glusterfs-rdma-3.12.6-1.el7 glusterfs-geo-replication-3.12.6-1.el7 glusterfs-3.12.6-1.el7 glusterfs-client-xlators-3.12.6-1.el7 glusterfs-api-3.12.6-1.el7 glusterfs-cli-3.12.6-1.el7 python2-gluster-3.12.6-1.el7 glusterfs-server-3.12.6-1.el7  ; yum clean all; \
+rm -f /etc/logrotate.d/glusterfs; \
+rm -f /etc/logrotate.d/glusterfs-georep; \
 sed -i '/Defaults    requiretty/c\#Defaults    requiretty' /etc/sudoers; \
 sed -i '/Port 22/c\Port 2222' /etc/ssh/sshd_config; \
 sed -i 's/Requires\=rpcbind\.service//g' /usr/lib/systemd/system/glusterd.service; \
@@ -47,11 +49,13 @@ ADD gluster-setup.service /etc/systemd/system/gluster-setup.service
 ADD gluster-setup.sh /usr/sbin/gluster-setup.sh
 ADD gluster-geo-setup.service /etc/systemd/system/gluster-geo-setup.service
 ADD gluster-geo-setup.sh /usr/sbin/gluster-geo-setup.sh
+ADD entrypoint.sh /usr/local/bin/entrypoint.sh
 
 RUN chmod 644 /etc/systemd/system/gluster-setup.service; \
 chmod 500 /usr/sbin/gluster-setup.sh; \
 chmod 644 /etc/systemd/system/gluster-geo-setup.service; \
 chmod 500 /usr/sbin/gluster-geo-setup.sh; \
+chmod +x /usr/local/bin/entrypoint.sh; \
 systemctl disable nfs-server.service; \
 systemctl mask getty.target; \
 systemctl enable ntpd.service; \
@@ -61,5 +65,5 @@ systemctl enable gluster-geo-setup.service;
 
 EXPOSE 2222 111 245 443 24007 2049 8080 6010 6011 6012 38465 38466 38468 38469 49152 49153 49154 49156 49157 49158 49159 49160 49161 49162
 
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["/usr/sbin/init"]
-
